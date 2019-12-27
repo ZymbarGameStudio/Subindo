@@ -33,7 +33,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (Input.GetAxis("Jump") == 1 && isGrounded())
         {
-            _rigidbody2D.velocity = new Vector3(_rigidbody2D.velocity.x, _jumpHeight * 0.5f);
+            _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x, _jumpHeight * 0.5f);
         }
 
         if (moveRight)
