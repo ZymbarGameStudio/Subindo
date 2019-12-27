@@ -23,9 +23,10 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        var moveHorizontal = Input.GetAxis("Horizontal");
+        var moveLeft = Input.GetButton("GoLeft");
+        var moveRight = Input.GetButton("GoRight");
 
-        var isMoving = moveHorizontal == 1 | moveHorizontal == -1;
+        var isMoving = moveLeft | moveRight;
 
         _animator.SetBool("isMoving", isMoving);
         _animator.SetBool("isGrounded", isGrounded());
@@ -35,19 +36,19 @@ public class PlayerMovement : MonoBehaviour
             _rigidbody2D.velocity = new Vector3(_rigidbody2D.velocity.x, _jumpHeight * 0.5f);
         }
 
-        if (moveHorizontal == 1)
+        if (moveRight)
         {
             _spriteRenderer.flipX = false;
 
             transform.position += _speed * Time.deltaTime * Vector3.right;
         }
 
-        if (moveHorizontal == -1)
+        if (moveLeft)
         {
             _spriteRenderer.flipX = true;
 
             transform.position += _speed * Time.deltaTime * -Vector3.right;
-        }    
+        }
     }
 
     bool isGrounded()
