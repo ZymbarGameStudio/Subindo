@@ -8,6 +8,7 @@ public class PlayerMovement : MonoBehaviour
     public float _speed = 2.0f;
 
     public Transform _groundCheck;
+    public Transform _deathCheck;
 
     private Animator _animator;
     private Rigidbody2D _rigidbody2D;
@@ -23,31 +24,34 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        var moveLeft = Input.GetButton("GoLeft");
-        var moveRight = Input.GetButton("GoRight");
-
-        var isMoving = moveLeft | moveRight;
-
-        _animator.SetBool("isMoving", isMoving);
-        _animator.SetBool("isGrounded", isGrounded());
-
-        if (Input.GetAxis("Jump") == 1 && isGrounded())
+        if(!isDead())
         {
-            _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x, _jumpHeight * 0.5f);
-        }
+            var moveLeft = Input.GetButton("GoLeft");
+            var moveRight = Input.GetButton("GoRight");
 
-        if (moveRight)
-        {
-            _spriteRenderer.flipX = false;
+            var isMoving = moveLeft | moveRight;
 
-            transform.position += _speed * Time.deltaTime * Vector3.right;
-        }
+            _animator.SetBool("isMoving", isMoving);
+            _animator.SetBool("isGrounded", isGrounded());
 
-        if (moveLeft)
-        {
-            _spriteRenderer.flipX = true;
+            if (Input.GetAxis("Jump") == 1 && isGrounded())
+            {
+                _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x, _jumpHeight);
+            }
 
-            transform.position += _speed * Time.deltaTime * -Vector3.right;
+            if (moveRight)
+            {
+                _spriteRenderer.flipX = false;
+
+                transform.position += _speed * Time.deltaTime * Vector3.right;
+            }
+
+            if (moveLeft)
+            {
+                _spriteRenderer.flipX = true;
+
+                transform.position += _speed * Time.deltaTime * -Vector3.right;
+            }
         }
     }
 
@@ -56,5 +60,15 @@ public class PlayerMovement : MonoBehaviour
         var grounded = Physics2D.Raycast(_groundCheck.position, Vector2.down, 0.1f);
 
         return grounded; 
+    }
+
+    bool isDead()
+    {
+        var isDead = transform.position.y <= _deathCheck.position.y;
+
+        if (isDead)
+            Destroy(this);
+
+        return isDead;
     }
 }
